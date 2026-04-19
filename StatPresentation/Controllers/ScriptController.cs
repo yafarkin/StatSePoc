@@ -32,26 +32,26 @@ public class ScriptController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Executing script {Script}", scriptName);
+            _logger.LogInformation("Executing script {Tag}/{Script}", tag, scriptName);
 
             var result = _scriptExecutor.Execute(
                 tag: tag,
                 scriptName: scriptName,
                 json: body?.GetRawText());
 
-            _logger.LogInformation("Script {Script} executed successfully, time = {time} ms", scriptName, sw.ElapsedMilliseconds);
+            _logger.LogInformation("Script {Tag}/{Script} executed successfully, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
 
             return Ok(result);
         }
         catch (JavaScriptException e)
         {
-            _logger.LogError(e, "Script {Script} failed, time = {time} ms", scriptName, sw.ElapsedMilliseconds);
+            _logger.LogError(e, "Script {Tag}/{Script} failed, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
 
             return BadRequest(_isDevelopment ? e.ToString() : e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unexpected error in script {Script}, time = {time} ms", scriptName, sw.ElapsedMilliseconds);
+            _logger.LogError(e, "Unexpected error in script {Tag}/{Script}, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
             
             return Problem(_isDevelopment ? e.ToString() : e.Message);
         }

@@ -51,10 +51,10 @@ internal sealed class ScriptExecutor : IScriptExecutor
         
         engine.SetValue("log", new Action<object>(msg =>
         {
-            _logger.LogInformation("[SCRIPT][Name={name}] {Message}", scriptName, msg);
+            _logger.LogInformation("[SCRIPT][{tag}/{name}] {Message}", tag, scriptName, msg);
         }));        
         
-        engine.SetValue("require", new Func<string, object>(requireScriptName =>
+        engine.SetValue("require", new Func<string, object?>(requireScriptName =>
         {
             var script = _scriptLoader.Load(tag, requireScriptName);
 

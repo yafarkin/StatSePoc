@@ -3,13 +3,11 @@ function handle(data) {
 
     const sum = data.a + data.b;
     
-    const version = api.GetVersion();
     const serverTime = api.GetServerTime();
 
     let result = {
         success: true,
         sum: sum,
-        version: version,
         time: serverTime
     };
 
