@@ -9,8 +9,6 @@ internal sealed class FileScriptProvider : IScriptProvider, IScriptCatalog
         AppContext.BaseDirectory,
         "UserScripts");
 
-    private IScriptProvider _scriptProviderImplementation;
-
     private string GetFullPath(string path)
     {
         var full = Path.GetFullPath(Path.Combine(_root, path));

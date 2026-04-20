@@ -1,10 +1,13 @@
 using DataService;
 using DataService.Interfaces;
+using MetricService;
 using Prometheus;
 using ScriptProviderService;
 using ScriptService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMetricsService();
 
 builder.Services.AddDataService();
 builder.Services.AddScriptProviderService();
@@ -23,7 +26,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMetricServer();
 app.UseHttpMetrics();
+
 app.MapMetrics();
 
 app.MapControllers();

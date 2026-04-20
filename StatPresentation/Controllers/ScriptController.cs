@@ -28,31 +28,21 @@ public class ScriptController : ControllerBase
     [HttpPost("{tag}/{scriptName}")]
     public IActionResult Run(string tag, string scriptName, [FromBody] JsonElement? body)
     {
-        var sw = Stopwatch.StartNew();
-
         try
         {
-            _logger.LogInformation("Executing script {Tag}/{Script}", tag, scriptName);
-
             var result = _scriptExecutor.Execute(
                 tag: tag,
                 scriptName: scriptName,
                 json: body?.GetRawText());
 
-            _logger.LogInformation("Script {Tag}/{Script} executed successfully, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
-
             return Ok(result);
         }
         catch (JavaScriptException e)
         {
-            _logger.LogError(e, "Script {Tag}/{Script} failed, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
-
             return BadRequest(_isDevelopment ? e.ToString() : e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unexpected error in script {Tag}/{Script}, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
-            
             return Problem(_isDevelopment ? e.ToString() : e.Message);
         }
     }

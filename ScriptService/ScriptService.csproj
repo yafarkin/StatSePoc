@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DataService\DataService.csproj" />
+      <ProjectReference Include="..\MetricService\MetricService.csproj" />
       <ProjectReference Include="..\ScriptProviderService\ScriptProviderService.csproj" />
     </ItemGroup>
 
