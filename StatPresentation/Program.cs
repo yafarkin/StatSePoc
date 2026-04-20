@@ -3,7 +3,6 @@ using DataService.Interfaces;
 using Prometheus;
 using ScriptProviderService;
 using ScriptService;
-using ScriptService.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

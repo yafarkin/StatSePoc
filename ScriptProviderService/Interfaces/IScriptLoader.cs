@@ -1,6 +1,8 @@
+using ScriptProviderService.Dtos;
+
 namespace ScriptProviderService.Interfaces;
 
 public interface IScriptLoader
 {
-    string Load(string tag, string scriptName);
+    Script Load(string tag, string scriptName);
 }

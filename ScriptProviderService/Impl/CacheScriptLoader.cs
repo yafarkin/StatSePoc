@@ -18,7 +18,7 @@ internal sealed class CacheScriptLoader : IScriptLoader
         _provider = provider;
     }
 
-    public string Load(string tag, string scriptName)
+    public Script Load(string tag, string scriptName)
     {
         var scriptKey = _resolver.Resolve(tag, scriptName);
         var cacheKey = scriptKey.Path;
@@ -27,7 +27,11 @@ internal sealed class CacheScriptLoader : IScriptLoader
         {
             if (cached.Item1.Version == scriptKey.Version)
             {
-                return cached.Item2.Code;
+                return new Script
+                {
+                    Key = cached.Item1,
+                    Data = cached.Item2,
+                };
             }
         }
 
@@ -40,8 +44,12 @@ internal sealed class CacheScriptLoader : IScriptLoader
                 existing.Item1.Version >= scriptKey.Version
                     ? existing
                     : (scriptKey, scriptData)
-        );        
+        );
 
-        return scriptData.Code;
+        return new Script
+        {
+            Key = scriptKey,
+            Data = scriptData,
+        };
     }        
 }

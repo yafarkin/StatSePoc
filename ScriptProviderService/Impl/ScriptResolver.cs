@@ -14,15 +14,18 @@ internal sealed class ScriptResolver : IScriptResolver
 
     public ScriptKey Resolve(string tag, string scriptName)
     {
-        var tagPath = $"tags/{tag}/{scriptName}.js";
-        var key = _provider.Exist(tagPath);
-        if (key is not null)
+        if (!string.IsNullOrWhiteSpace(tag))
         {
-            return key;
+            var tagPath = $"tags/{tag}/{scriptName}.js";
+            var tagKey = _provider.Exist(tagPath);
+            if (tagKey is not null)
+            {
+                return tagKey;
+            }
         }
 
         var overridesPath = $"overrides/{scriptName}.js";
-        key = _provider.Exist(overridesPath);
+        var key = _provider.Exist(overridesPath);
         if (key is not null)
         {
             return key;
