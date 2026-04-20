@@ -16,6 +16,15 @@ internal sealed class FileScriptProvider : IScriptProvider, IScriptCatalog
         return !full.StartsWith(_root) ? throw new FileNotFoundException($"Invalid script path: {path}") : full;
     }
 
+    public IEnumerable<ScriptKey> List()
+    {
+        var files = Directory.GetFiles(_root, "*.js", SearchOption.AllDirectories);
+        foreach (var file in files)
+        {
+            yield return Exist(file)!;
+        }
+    }
+
     public ScriptKey? Exist(string path)
     {
         var fileName = GetFullPath(path);

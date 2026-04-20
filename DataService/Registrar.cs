@@ -1,3 +1,4 @@
+using DataService.HealthChecks;
 using DataService.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,10 @@ public static class Registrar
     {
         services.AddScoped<IDataService, Impl.DataService>();
         services.AddScoped<ISampleDataService, Impl.SampleDataService>();
-
+        
+        services.AddHealthChecks()
+            .AddCheck<DbHealthCheck>("db", tags: ["ready"]);
+        
         return services;
     }
 }

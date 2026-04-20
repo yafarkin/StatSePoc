@@ -8,19 +8,37 @@ internal sealed class CacheScriptLoader : IScriptLoader
 {
     private readonly IScriptResolver _resolver;
     private readonly IScriptProvider _provider;
+    private readonly IScriptCatalog _catalog;
+    
     private readonly ConcurrentDictionary<string, (ScriptKey, ScriptData)> _cache = new();
 
     public CacheScriptLoader(
         IScriptResolver resolver,
-        IScriptProvider provider)
+        IScriptProvider provider,
+        IScriptCatalog catalog)
     {
         _resolver = resolver;
         _provider = provider;
+        _catalog = catalog;
+    }
+
+    public void LoadAll()
+    {
+        var keys = _catalog.List();
+        foreach (var key in keys)
+        {
+            Load(key);
+        }
     }
 
     public Script Load(string tag, string scriptName)
     {
         var scriptKey = _resolver.Resolve(tag, scriptName);
+        return Load(scriptKey);
+    }
+    
+    private Script Load(ScriptKey scriptKey)
+    {
         var cacheKey = scriptKey.Path;
 
         if (_cache.TryGetValue(cacheKey, out var cached))
