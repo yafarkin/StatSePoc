@@ -1,9 +1,9 @@
-using System.Diagnostics;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using ScriptService.Interfaces;
 using Jint.Runtime;
-using Microsoft.AspNetCore.Http.HttpResults;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using ScriptService.Handlers.RunScript;
+using ScriptService.Interfaces;
 
 namespace StatPresentation.Controllers;
 
@@ -12,29 +12,34 @@ namespace StatPresentation.Controllers;
 public class ScriptController : ControllerBase
 {
     private readonly IScriptExecutor _scriptExecutor;
-    private readonly ILogger<ScriptController> _logger;
     private readonly bool _isDevelopment;
+    
+    private readonly IMediator _mediator;
 
     public ScriptController(
         IScriptExecutor scriptExecutor,
-        ILogger<ScriptController> logger,
-        IWebHostEnvironment hostingEnvironment)
+        IWebHostEnvironment hostingEnvironment,
+        IMediator mediator)
     {
         _scriptExecutor = scriptExecutor;
-        _logger = logger;
+        _mediator = mediator;
         _isDevelopment = hostingEnvironment.IsDevelopment();
     }
 
     [HttpPost("{tag}/{scriptName}")]
-    public IActionResult Run(string tag, string scriptName, [FromBody] JsonElement? body)
+    public async Task<IActionResult> Run(string tag, string scriptName, [FromBody] JsonElement? body, CancellationToken cancellationToken)
     {
         try
         {
-            var result = _scriptExecutor.Execute(
-                tag: tag,
-                scriptName: scriptName,
-                json: body?.GetRawText());
+            var query = new RunScriptQuery
+            {
+                Tag = tag,
+                ScriptName = scriptName,
+                Json = body?.GetRawText()
+            };
 
+            var result = await _mediator.Send(query, cancellationToken);
+                
             return Ok(result);
         }
         catch (JavaScriptException e)
