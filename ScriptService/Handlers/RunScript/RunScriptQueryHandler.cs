@@ -1,4 +1,5 @@
 using MediatR;
+using Newtonsoft.Json;
 using ScriptService.Interfaces;
 
 namespace ScriptService.Handlers.RunScript;
@@ -14,10 +15,12 @@ internal sealed class RunScriptQueryHandler : IRequestHandler<RunScriptQuery, ob
 
     public Task<object?> Handle(RunScriptQuery request, CancellationToken cancellationToken)
     {
+        var json = JsonConvert.SerializeObject(request);
+        
         var result = _executor.Execute(
             request.Tag,
             request.ScriptName,
-            request.Json);
+            json);
 
         return Task.FromResult(result);
     }

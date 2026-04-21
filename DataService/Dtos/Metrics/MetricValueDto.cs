@@ -4,7 +4,7 @@ public sealed record MetricValueDto
 {
     public Ulid Id { get; init; }
     
-    public int UserId { get; init; }
+    public long UserId { get; init; }
     public Guid? UserGroupId { get; init; }
 
     public string Tag { get; init; } = null!;

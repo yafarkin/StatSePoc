@@ -7,6 +7,7 @@ using Jint.Runtime;
 using MetricService.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ScriptProviderService.Interfaces;
 using ScriptService.Interfaces;
 
@@ -50,10 +51,7 @@ internal sealed class ScriptExecutor : IScriptExecutor
             var script = _scriptLoader.Load(tag, scriptName);
 
             var engine = CreateEngine(scriptName);
-
-            engine.SetValue("data", data);
             engine.Execute(script.Data.Code);
-
             var result = engine.Invoke("handle", data).ToObject();
 
             _logger.LogInformation("Script {Tag}/{Script} executed successfully, time = {time} ms", tag, scriptName,

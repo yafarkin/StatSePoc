@@ -5,7 +5,7 @@ function handle(data) {
     log("Input data: " + JSON.stringify(data));
     
     const sampleRequest = {
-        "text": data.text,
+        "text": data.Payload.text,
         "number": 123,
         "arr": [1, 2, 3],
         "inner": {
@@ -15,13 +15,14 @@ function handle(data) {
     
     const sampleResponse = api.SampleApi.CallSample(sampleRequest);
 
-    const sum = data.a + data.b;
+    const sum = data.Payload.a + data.Payload.b;
     
     const serverTime = api.GetServerTime();
 
     let result = {
         success: true,
         sum: sum,
+        tag: data.Tag,
         helper_res1: helper.handle(sum),
         helper_res2: helper2.handle(sum),
         time: serverTime,

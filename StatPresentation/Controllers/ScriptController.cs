@@ -2,8 +2,10 @@ using System.Text.Json;
 using Jint.Runtime;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ScriptService.Handlers.RunScript;
 using ScriptService.Interfaces;
+using StatPresentation.Dtos;
 
 namespace StatPresentation.Controllers;
 
@@ -27,7 +29,7 @@ public class ScriptController : ControllerBase
     }
 
     [HttpPost("{tag}/{scriptName}")]
-    public async Task<IActionResult> Run(string tag, string scriptName, [FromBody] JsonElement? body, CancellationToken cancellationToken)
+    public async Task<IActionResult> Run(string tag, string scriptName, [FromBody] BaseQueryDto jsQuery, CancellationToken cancellationToken)
     {
         try
         {
@@ -35,7 +37,9 @@ public class ScriptController : ControllerBase
             {
                 Tag = tag,
                 ScriptName = scriptName,
-                Json = body?.GetRawText()
+                UserId = jsQuery.UserId,
+                UserGroupId = jsQuery.UserGroupId,
+                Payload = jsQuery.Payload,
             };
 
             var result = await _mediator.Send(query, cancellationToken);

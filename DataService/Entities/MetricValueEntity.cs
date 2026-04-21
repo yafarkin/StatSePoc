@@ -4,7 +4,7 @@ internal sealed record MetricValueEntity
 {
     public string Id { get; private set; } = null!;
     
-    public int UserId { get; init; }
+    public long UserId { get; init; }
     public string? UserGroupId { get; init; }
 
     public string Tag { get; init; } = null!;

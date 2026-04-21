@@ -19,4 +19,10 @@
       <ProjectReference Include="..\ScriptProviderService\ScriptProviderService.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Handlers\RunScript\RunScriptQuery.cs">
+        <DependentUpon>RunScriptQueryHandler.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

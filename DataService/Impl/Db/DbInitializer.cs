@@ -68,7 +68,7 @@ VALUES (@Tag, @Name, @Content)
 CREATE TABLE IF NOT EXISTS MetricValue (
     Id TEXT PRIMARY KEY,
     Tag TEXT NOT NULL,
-    UserId INTEGER NULL,
+    UserId INTEGER NOT NULL,
     UserIdGroup TEXT NULL,
     MetricName TEXT NOT NULL,
     Value REAL NOT NULL,
