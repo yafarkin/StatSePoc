@@ -34,7 +34,7 @@ internal sealed class ScriptRepository : IScriptRepository
             new { Tag = tag, Name = name });
     }
 
-    public async Task<long> CreateAsync(ScriptEntity script, CancellationToken cancellationToken)
+    public async Task<long> CreateAsync(ScriptEntity entity, CancellationToken cancellationToken)
     {
         using var conn = _factory.Create();
 
@@ -42,12 +42,12 @@ internal sealed class ScriptRepository : IScriptRepository
                                                      INSERT INTO Scripts (Tag, Name, Content)
                                                      VALUES (@Tag, @Name, @Content);
                                                      SELECT last_insert_rowid();
-                                                     """, script);
+                                                     """, entity);
 
         return id;
     }
 
-    public async Task UpdateAsync(ScriptEntity script, CancellationToken cancellationToken)
+    public async Task UpdateAsync(ScriptEntity entity, CancellationToken cancellationToken)
     {
         using var conn = _factory.Create();
 
@@ -57,7 +57,7 @@ internal sealed class ScriptRepository : IScriptRepository
                                     Name = @Name,
                                     Content = @Content
                                 WHERE Id = @Id
-                                """, script);
+                                """, entity);
     }
 
     public async Task DeleteAsync(long id, CancellationToken cancellationToken)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using DataService.Interfaces;
+using DataService.Interfaces.Api;
 using Jint;
 using Jint.Runtime;
 using MetricService.Interfaces;

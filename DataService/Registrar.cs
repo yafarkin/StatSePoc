@@ -1,7 +1,10 @@
 using DataService.HealthChecks;
 using DataService.Impl.Api;
 using DataService.Impl.Db;
+using DataService.Impl.Db.Repositories;
 using DataService.Interfaces;
+using DataService.Interfaces.Api;
+using DataService.Interfaces.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,14 +17,17 @@ public static class Registrar
     {
         services.AddScoped<IDataService, Impl.Api.DataService>();
         services.AddScoped<ISampleDataService, SampleDataService>();
-
-        services.AddHealthChecks()
-            .AddCheck<DbHealthCheck>("db", tags: ["ready"]);
+        services.AddScoped<IMetricDataService, MetricDataService>();
+        
+        services.AddScoped<IScriptRepository, ScriptRepository>();
+        services.AddScoped<IMetricValueRepository, MetricValueRepository>();
 
         services.AddSingleton<DbInitializer>();
         services.AddSingleton<IDbWarmupState, DbWarmupState>();
-
         services.AddHostedService<DbWarmupService>();
+
+        services.AddHealthChecks()
+            .AddCheck<DbHealthCheck>("db", tags: ["ready"]);
 
         var connectionString = configuration.GetConnectionString("Default");
 

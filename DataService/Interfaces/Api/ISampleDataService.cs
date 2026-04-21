@@ -1,6 +1,6 @@
 using DataService.Dtos.SampleData;
 
-namespace DataService.Interfaces;
+namespace DataService.Interfaces.Api;
 
 public interface ISampleDataService
 {

@@ -1,4 +1,4 @@
-namespace DataService.Interfaces;
+namespace DataService.Interfaces.Api;
 
 public interface IDataService
 {

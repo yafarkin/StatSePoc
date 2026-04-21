@@ -1,4 +1,5 @@
 using DataService.Interfaces;
+using DataService.Interfaces.Api;
 
 namespace DataService.Impl.Api;
 
