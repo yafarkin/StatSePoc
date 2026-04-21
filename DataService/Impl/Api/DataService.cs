@@ -1,4 +1,3 @@
-using DataService.Interfaces;
 using DataService.Interfaces.Api;
 
 namespace DataService.Impl.Api;
@@ -6,10 +5,12 @@ namespace DataService.Impl.Api;
 internal sealed class DataService : IDataService
 {
     public ISampleDataService SampleApi { get; }
-    
-    public DataService(ISampleDataService sampleApi)
+    public IMetricDataService MetricApi { get; }
+
+    public DataService(ISampleDataService sampleApi, IMetricDataService metricApi)
     {
         SampleApi = sampleApi;
+        MetricApi = metricApi;
     }
 
     public string GetServerTime()

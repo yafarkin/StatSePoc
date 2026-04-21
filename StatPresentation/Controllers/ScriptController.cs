@@ -28,8 +28,8 @@ public class ScriptController : ControllerBase
         _isDevelopment = hostingEnvironment.IsDevelopment();
     }
 
-    [HttpPost("{tag}/{scriptName}")]
-    public async Task<IActionResult> Run(string tag, string scriptName, [FromBody] BaseQueryDto jsQuery, CancellationToken cancellationToken)
+    [HttpPost("{tag}/{userId}/{scriptName}")]
+    public async Task<IActionResult> Run(string tag, long userId, string scriptName, [FromBody] BaseQueryDto jsQuery, CancellationToken cancellationToken)
     {
         try
         {
@@ -37,7 +37,7 @@ public class ScriptController : ControllerBase
             {
                 Tag = tag,
                 ScriptName = scriptName,
-                UserId = jsQuery.UserId,
+                UserId = userId,
                 UserGroupId = jsQuery.UserGroupId,
                 Payload = jsQuery.Payload,
             };
