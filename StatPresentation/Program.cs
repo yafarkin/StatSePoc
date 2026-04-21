@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMetricsService();
 
-builder.Services.AddDataService();
+builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddScriptProviderService();
 builder.Services.AddScriptService();
 

@@ -1,9 +1,7 @@
-using System.Text.Json.Serialization;
 using DataService.Dtos.SampleData;
 using DataService.Interfaces;
-using Newtonsoft.Json;
 
-namespace DataService.Impl;
+namespace DataService.Impl.Api;
 
 internal sealed class SampleDataService : ISampleDataService
 {

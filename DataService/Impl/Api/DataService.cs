@@ -1,6 +1,6 @@
 using DataService.Interfaces;
 
-namespace DataService.Impl;
+namespace DataService.Impl.Api;
 
 internal sealed class DataService : IDataService
 {
