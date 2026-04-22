@@ -19,15 +19,9 @@ internal sealed class MetricValueRepository : IMetricValueRepository
     {
         using var conn = _factory.Create();
 
-        var sql = "SELECT Id, Tag, UserId, UserIdGroup, MetricName, Value, CreatedAt FROM MetricValue";
+        var sql = "SELECT Tag, UserId, UserGroupId, MetricName, Value, CreatedAt FROM MetricValue";
         var where = new List<string>();
         var param = new DynamicParameters();
-
-        if (query.Id != Ulid.Empty)
-        {
-            where.Add("Id = @Id");
-            param.Add("@Id", query.Id);
-        }
 
         if (!string.IsNullOrWhiteSpace(query.Tag))
         {
@@ -43,8 +37,8 @@ internal sealed class MetricValueRepository : IMetricValueRepository
 
         if (query.UserGroupId is not null)
         {
-            where.Add("UserIdGroup = @UserIdGroup");
-            param.Add("@UserIdGroup", query.UserGroupId.Value);
+            where.Add("UserGroupId = @UserGroupId");
+            param.Add("@UserGroupId", query.UserGroupId.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(query.MetricName))
@@ -75,37 +69,36 @@ internal sealed class MetricValueRepository : IMetricValueRepository
         return result;
     }
 
-    public async Task CreateAsync(
+    public async Task UpsertAsync(
         MetricValueEntity entity,
         CancellationToken cancellationToken = default)
     {
         using var conn = _factory.Create();
 
-        entity.GenerateId();
-
         var sql = @"
 INSERT INTO MetricValue (
-  Id,
   Tag,
   UserId,
-  UserIdGroup,
+  UserGroupId,
   MetricName,
   Value,
   CreatedAt
 )
 VALUES (
-  @Id,
   @Tag,
   @UserId,
-  @UserIdGroup,
+  @UserGroupId,
   @MetricName,
   @Value,
   @CreatedAt
-);";
+)
+ON CONFLICT(Tag, UserId, MetricName, CreatedAt)
+DO UPDATE SET
+  Value = excluded.Value
+";
 
         var param = new
         {
-            entity.Id,
             entity.Tag,
             entity.UserId,
             entity.UserGroupId,
@@ -115,50 +108,5 @@ VALUES (
         };
 
         await conn.ExecuteAsync(new CommandDefinition(sql, param, cancellationToken: cancellationToken));
-    }
-
-    public async Task UpdateAsync(
-        MetricValueEntity entity,
-        CancellationToken cancellationToken = default)
-    {
-        using var conn = _factory.Create();
-
-        var sql = @"
-UPDATE MetricValue
-SET
-  Tag = @Tag,
-  UserId = @UserId,
-  UserIdGroup = @UserIdGroup,
-  MetricName = @MetricName,
-  Value = @Value,
-  CreatedAt = @CreatedAt
-WHERE Id = @Id;";
-
-        var param = new
-        {
-            entity.Id,
-            entity.Tag,
-            entity.UserId,
-            entity.UserGroupId,
-            entity.MetricName,
-            entity.Value,
-            entity.CreatedAt
-        };
-
-        var affected = await conn.ExecuteAsync(
-            new CommandDefinition(sql, param, cancellationToken: cancellationToken));
-
-        if (affected == 0)
-        {
-            throw new InvalidOperationException($"MetricValue with Id={entity.Id} not found");
-        }
-    }
-    
-    public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
-    {
-        using var conn = _factory.Create();
-
-        await conn.ExecuteAsync(new CommandDefinition("DELETE FROM MetricValue WHERE Id = @Id", new { Id = id },
-            cancellationToken: cancellationToken));
     }
 }

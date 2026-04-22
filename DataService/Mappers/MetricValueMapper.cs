@@ -10,13 +10,12 @@ internal static class MetricValueMapper
     {
         var result = new MetricValueDto
         {
-            Id = Ulid.Parse(entity.Id),
             Tag = entity.Tag,
             UserId = entity.UserId,
             UserGroupId = string.IsNullOrWhiteSpace(entity.UserGroupId) ? null : Guid.Parse(entity.UserGroupId),
             MetricName = entity.MetricName,
             Value = entity.Value,
-            CreatedAt = DateTimeOffset.Parse(entity.CreatedAt, null, DateTimeStyles.RoundtripKind),
+            CreatedAt = DateOnly.Parse(entity.CreatedAt),
         };
 
         return result;
@@ -31,11 +30,9 @@ internal static class MetricValueMapper
             UserGroupId = dto.UserGroupId is null ? null : dto.UserGroupId.ToString(),
             MetricName = dto.MetricName,
             Value = dto.Value,
-            CreatedAt = dto.CreatedAt.ToUniversalTime().ToString("O")
+            CreatedAt = dto.CreatedAt.ToString("O")
         };
         
-        result.SetFromUlid(dto.Id);
-
         return result;
     }
 }

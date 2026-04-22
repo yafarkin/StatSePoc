@@ -1,11 +1,9 @@
-using System.Text.Json;
 using Jint.Runtime;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ScriptService.Handlers.RunScript;
 using ScriptService.Interfaces;
-using StatPresentation.Dtos;
 
 namespace StatPresentation.Controllers;
 
@@ -13,23 +11,29 @@ namespace StatPresentation.Controllers;
 [Route("run")]
 public class ScriptController : ControllerBase
 {
-    private readonly IScriptExecutor _scriptExecutor;
     private readonly bool _isDevelopment;
     
     private readonly IMediator _mediator;
 
     public ScriptController(
-        IScriptExecutor scriptExecutor,
         IWebHostEnvironment hostingEnvironment,
         IMediator mediator)
     {
-        _scriptExecutor = scriptExecutor;
         _mediator = mediator;
         _isDevelopment = hostingEnvironment.IsDevelopment();
     }
 
     [HttpPost("{tag}/{userId}/{scriptName}")]
-    public async Task<IActionResult> Run(string tag, long userId, string scriptName, [FromBody] BaseQueryDto jsQuery, CancellationToken cancellationToken)
+    public async Task<IActionResult> Run(
+        string tag,
+        long userId,
+        string scriptName,
+        [FromQuery] Guid? userGroupId,
+        [FromQuery] string? metricName,
+        [FromQuery] DateOnly? startDate,
+        [FromQuery] DateOnly? endDate,
+        [FromBody] JObject? payload,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -38,8 +42,11 @@ public class ScriptController : ControllerBase
                 Tag = tag,
                 ScriptName = scriptName,
                 UserId = userId,
-                UserGroupId = jsQuery.UserGroupId,
-                Payload = jsQuery.Payload,
+                UserGroupId = userGroupId,
+                MetricName = metricName,
+                StartDate = startDate,
+                EndDate = endDate,
+                Payload = payload,
             };
 
             var result = await _mediator.Send(query, cancellationToken);

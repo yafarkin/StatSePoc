@@ -83,7 +83,7 @@ internal sealed class PrometheusMetrics : IScriptMetrics, IMetricValueServiceMet
 
     public void IncExecution(string method, string status)
     {
-        _scriptExecutionCounter
+        _metricValueExecutionCounter
             .WithLabels(method, status)
             .Inc();
     }

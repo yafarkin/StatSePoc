@@ -22,7 +22,7 @@ internal sealed class MetricDataService : IMetricDataService
         _metrics = metrics;
     }
 
-    public MetricValueDto[] GetMetricValues(string? id, string? tag, int? userId, string? userGroupId, string? metricName, string? startDate, string? endDate)
+    public MetricValueDto[] GetMetricValues(string? tag, int? userId, string? userGroupId, string? metricName, string? startDate, string? endDate)
     {
         var sw = Stopwatch.StartNew();
 
@@ -30,17 +30,16 @@ internal sealed class MetricDataService : IMetricDataService
         {
             var query = new MetricValueQuery
             {
-                Id = string.IsNullOrWhiteSpace(id) ? Ulid.Empty : Ulid.Parse(id),
                 Tag = tag,
                 UserId = userId,
                 UserGroupId = string.IsNullOrWhiteSpace(userGroupId) ? null : Guid.Parse(userGroupId),
                 MetricName = metricName,
                 StartDate = string.IsNullOrWhiteSpace(startDate)
                     ? null
-                    : DateTimeOffset.Parse(startDate, null, DateTimeStyles.RoundtripKind),
+                    : DateOnly.Parse(startDate),
                 EndDate = string.IsNullOrWhiteSpace(endDate)
                     ? null
-                    : DateTimeOffset.Parse(endDate, null, DateTimeStyles.RoundtripKind),
+                    : DateOnly.Parse(endDate),
             };
 
             var metrics = _repository.Get(query);

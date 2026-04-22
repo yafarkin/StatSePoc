@@ -70,7 +70,7 @@ internal sealed class ScriptExecutor : IScriptExecutor
         catch (TimeoutException e)
         {
             _logger.LogError(e, "Script {Tag}/{Script} timeouted, time = {time} ms", tag, scriptName, sw.ElapsedMilliseconds);
-            _scriptMetrics.IncExecution(tag, scriptName, "timeoout");
+            _scriptMetrics.IncExecution(tag, scriptName, "timeout");
             throw;
         }
         catch (Exception e)

@@ -1,8 +1,12 @@
 function handle(data) {
     const tag = data.Tag;
     const userId = data.UserId;
+    const userGroupId = data.UserGroupId;
+    const metricName = data.MetricName;
+    const startDate = data.StartDate;
+    const endDate = data.EndDate;
     
-    const metricValues = api.MetricApi.GetMetricValues(null, tag, userId, null, null, null, null);
+    const metricValues = api.MetricApi.GetMetricValues(tag, userId, userGroupId, metricName, startDate, endDate);
 
     const sum = metricValues.reduce((acc, x) => acc + x.Value, 0);
     const avg = metricValues.length > 0 ? sum / metricValues.length : 0;
