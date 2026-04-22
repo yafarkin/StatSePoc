@@ -11,6 +11,7 @@ public static class Registrar
         services.AddSingleton<PrometheusMetrics>();
         
         services.AddSingleton<IScriptMetrics>(sp => sp.GetRequiredService<PrometheusMetrics>());
+        services.AddSingleton<IMetricValueServiceMetrics>(sp => sp.GetRequiredService<PrometheusMetrics>());
 
         return services;
     }
