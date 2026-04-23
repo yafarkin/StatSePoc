@@ -8,6 +8,17 @@ function handle(data) {
     const calcValues = sum_avg.handle('values', data);
     const calcEvents = sum_avg.handle('events', data);
     
+    let storedData = api.MetricApi.GetMetricMetadata(tag, "card key", null, null);
+    
+    if (!storedData) {
+        storedData = { "key": Date.now()};
+        api.MetricApi.UpsertMetricMetadata(tag, "card key", null, null, JSON.stringify(storedData), null);
+    }
+    else
+    {
+        storedData = JSON.parse(storedData.data);
+    }
+    
     return {
         card1: {
             text: "Суммарное значение метрик",
@@ -21,7 +32,8 @@ function handle(data) {
         },
         userId: userId,
         tag: tag,
-        text: "Подсчитанные значения"
+        text: "Подсчитанные значения",
+        storedData: storedData
     };
 }
 

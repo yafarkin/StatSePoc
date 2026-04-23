@@ -1,6 +1,6 @@
 namespace DataService.Dtos.Queries;
 
-public sealed record MetricValueQuery
+internal sealed record MetricValueQuery
 {
     public string? Id { get; init; }
     public string? Tag { get; init; }

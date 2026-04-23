@@ -54,6 +54,12 @@
       <Compile Update="Impl\Db\DbInitializerScriptTable.cs">
         <DependentUpon>DbInitializer.cs</DependentUpon>
       </Compile>
+      <Compile Update="Impl\Db\DbInitializerMetricEvents.cs">
+        <DependentUpon>DbInitializer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Impl\Db\DbInitializerMetricMetadata.cs">
+        <DependentUpon>DbInitializer.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

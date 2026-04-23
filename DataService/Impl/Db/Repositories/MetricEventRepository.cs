@@ -103,7 +103,7 @@ VALUES (
 
         var param = new
         {
-            id,
+            Id = id,
             entity.Tag,
             entity.UserId,
             entity.UserGroupId,

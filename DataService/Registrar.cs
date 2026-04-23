@@ -22,6 +22,7 @@ public static class Registrar
         services.AddScoped<IScriptRepository, ScriptRepository>();
         services.AddScoped<IMetricValueRepository, MetricValueRepository>();
         services.AddScoped<IMetricEventRepository, MetricEventRepository>();
+        services.AddScoped<IMetricMetadataRepository, MetricMetadataRepository>();
 
         services.AddSingleton<DbInitializer>();
         services.AddSingleton<IDbWarmupState, DbWarmupState>();

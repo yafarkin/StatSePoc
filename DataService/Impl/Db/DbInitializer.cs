@@ -22,6 +22,7 @@ internal sealed partial class DbInitializer
         await CreateScriptTableAsync(conn, cancellationToken);
         await CreateMetricValueTableAsync(conn, cancellationToken);
         await CreateMetricEventTableAsync(conn, cancellationToken);
+        await CreateMetricMetadataAsync(conn, cancellationToken);
 
         await SeedScriptTableAsync(conn, cancellationToken);
         await SeedMetricValueTableAsync(conn, cancellationToken);
