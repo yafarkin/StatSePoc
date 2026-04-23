@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using ScriptService.Handlers.RunScript;
-using ScriptService.Interfaces;
 
 namespace StatPresentation.Controllers;
 

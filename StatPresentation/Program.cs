@@ -1,3 +1,5 @@
+namespace StatPresentation;
+
 using DataService;
 using MetricService;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -7,81 +9,87 @@ using Prometheus;
 using ScriptProviderService;
 using ScriptService;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddMetricsService();
-
-builder.Services.AddDataService(builder.Configuration);
-builder.Services.AddScriptProviderService();
-builder.Services.AddScriptService();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddHealthChecks()
-    .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
-
-builder.Services.AddControllers().AddNewtonsoftJson();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddMetricsService();
+
+        builder.Services.AddDataService(builder.Configuration);
+        builder.Services.AddScriptProviderService();
+        builder.Services.AddScriptService();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
+
+        builder.Services.AddControllers().AddNewtonsoftJson();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseMetricServer();
+        app.UseHttpMetrics();
+
+        app.MapMetrics();
+
+        app.MapControllers();
+
+        app.MapHealthChecks("/health/live", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live"),
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.ContentType = "application/json";
+
+                var result = new
+                {
+                    status = report.Status.ToString(),
+                    checks = report.Entries.Select(e => new
+                    {
+                        name = e.Key,
+                        status = e.Value.Status.ToString(),
+                        description = e.Value.Description,
+                        duration = e.Value.Duration.TotalMilliseconds
+                    })
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+            }
+        });
+
+        app.MapHealthChecks("/health/ready", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("ready"),
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.ContentType = "application/json";
+
+                var result = new
+                {
+                    status = report.Status.ToString(),
+                    checks = report.Entries.Select(e => new
+                    {
+                        name = e.Key,
+                        status = e.Value.Status.ToString(),
+                        description = e.Value.Description,
+                        duration = e.Value.Duration.TotalMilliseconds
+                    })
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+            }
+        });
+
+        app.Run();
+    }
 }
-
-app.UseMetricServer();
-app.UseHttpMetrics();
-
-app.MapMetrics();
-
-app.MapControllers();
-
-app.MapHealthChecks("/health/live", new HealthCheckOptions
-{
-    Predicate = r => r.Tags.Contains("live"),
-    ResponseWriter = async (context, report) =>
-    {
-        context.Response.ContentType = "application/json";
-
-        var result = new
-        {
-            status = report.Status.ToString(),
-            checks = report.Entries.Select(e => new
-            {
-                name = e.Key,
-                status = e.Value.Status.ToString(),
-                description = e.Value.Description,
-                duration = e.Value.Duration.TotalMilliseconds
-            })
-        };
-
-        await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
-    }
-});
-
-app.MapHealthChecks("/health/ready", new HealthCheckOptions
-{
-    Predicate = r => r.Tags.Contains("ready"),
-    ResponseWriter = async (context, report) =>
-    {
-        context.Response.ContentType = "application/json";
-
-        var result = new
-        {
-            status = report.Status.ToString(),
-            checks = report.Entries.Select(e => new
-            {
-                name = e.Key,
-                status = e.Value.Status.ToString(),
-                description = e.Value.Description,
-                duration = e.Value.Duration.TotalMilliseconds
-            })
-        };
-
-        await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
-    }
-});
-
-app.Run();

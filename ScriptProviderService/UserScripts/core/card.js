@@ -8,11 +8,11 @@ function handle(data) {
     const calcValues = sum_avg.handle('values', data);
     const calcEvents = sum_avg.handle('events', data);
     
-    let storedData = api.MetricApi.GetMetricMetadata(tag, "card key", null, null);
+    let storedData = api.MetricApi.GetMetricMetadata(tag, "card key", userId, null);
     
     if (!storedData) {
         storedData = { "key": Date.now()};
-        api.MetricApi.UpsertMetricMetadata(tag, "card key", null, null, JSON.stringify(storedData), null);
+        api.MetricApi.UpsertMetricMetadata(tag, "card key", userId, null, JSON.stringify(storedData), null);
     }
     else
     {

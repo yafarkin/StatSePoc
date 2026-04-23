@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricService", "MetricServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{2FBA886A-AFBA-4599-AAF8-807E0658D033}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{A4F71361-F7BC-43D7-AE96-E831004C00A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{2FBA886A-AFBA-4599-AAF8-807E0658D033}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FBA886A-AFBA-4599-AAF8-807E0658D033}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FBA886A-AFBA-4599-AAF8-807E0658D033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4F71361-F7BC-43D7-AE96-E831004C00A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4F71361-F7BC-43D7-AE96-E831004C00A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F71361-F7BC-43D7-AE96-E831004C00A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F71361-F7BC-43D7-AE96-E831004C00A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
