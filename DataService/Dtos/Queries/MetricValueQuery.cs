@@ -2,6 +2,7 @@ namespace DataService.Dtos.Queries;
 
 public sealed record MetricValueQuery
 {
+    public string? Id { get; init; }
     public string? Tag { get; init; }
     public long? UserId { get; init; }
     public Guid? UserGroupId { get; init; }

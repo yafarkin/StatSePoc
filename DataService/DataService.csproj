@@ -48,6 +48,12 @@
       <Compile Update="Impl\Api\MetricDataService.cs">
         <DependentUpon>DataService.cs</DependentUpon>
       </Compile>
+      <Compile Update="Impl\Db\DbInitializerMetricValues.cs">
+        <DependentUpon>DbInitializer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Impl\Db\DbInitializerScriptTable.cs">
+        <DependentUpon>DbInitializer.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

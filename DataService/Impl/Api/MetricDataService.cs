@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Globalization;
 using DataService.Dtos.Metrics;
 using DataService.Dtos.Queries;
 using DataService.Interfaces.Api;
@@ -12,14 +11,17 @@ namespace DataService.Impl.Api;
 internal sealed class MetricDataService : IMetricDataService
 {
     private readonly IMetricValueServiceMetrics _metrics;
-    private readonly IMetricValueRepository _repository;
+    private readonly IMetricValueRepository _valueRepository;
+    private readonly IMetricEventRepository _eventRepository;
 
     public MetricDataService(
-        IMetricValueRepository repository,
-        IMetricValueServiceMetrics metrics)
+        IMetricValueServiceMetrics metrics,
+        IMetricValueRepository valueRepository,
+        IMetricEventRepository eventRepository)
     {
-        _repository = repository;
         _metrics = metrics;
+        _valueRepository = valueRepository;
+        _eventRepository = eventRepository;
     }
 
     public MetricValueDto[] GetMetricValues(string? tag, int? userId, string? userGroupId, string? metricName, string? startDate, string? endDate)
@@ -42,7 +44,7 @@ internal sealed class MetricDataService : IMetricDataService
                     : DateOnly.Parse(endDate),
             };
 
-            var metrics = _repository.Get(query);
+            var metrics = _valueRepository.Get(query);
 
             var metricsDto = metrics
                 .Select(MetricValueMapper.ToDto)
@@ -52,7 +54,7 @@ internal sealed class MetricDataService : IMetricDataService
 
             return metricsDto;
         }
-        catch (Exception e)
+        catch
         {
             _metrics.IncExecution("GetMetricValues", "error");
             throw;
@@ -60,6 +62,49 @@ internal sealed class MetricDataService : IMetricDataService
         finally
         {
             _metrics.ObserverDuration("GetMetricValues", sw.Elapsed);
+        }
+    }
+
+    public MetricEventDto[] GetMetricEvents(string? id, string? tag, int? userId, string? userGroupId, string? metricName, string? startDate,
+        string? endDate)
+    {
+        var sw = Stopwatch.StartNew();
+
+        try
+        {
+            var query = new MetricValueQuery
+            {
+                Id = id,
+                Tag = tag,
+                UserId = userId,
+                UserGroupId = string.IsNullOrWhiteSpace(userGroupId) ? null : Guid.Parse(userGroupId),
+                MetricName = metricName,
+                StartDate = string.IsNullOrWhiteSpace(startDate)
+                    ? null
+                    : DateOnly.Parse(startDate),
+                EndDate = string.IsNullOrWhiteSpace(endDate)
+                    ? null
+                    : DateOnly.Parse(endDate),
+            };
+
+            var metrics = _eventRepository.Get(query);
+
+            var metricsDto = metrics
+                .Select(MetricEventMapper.ToDto)
+                .ToArray();
+
+            _metrics.IncExecution("GetMetricEvents", "success");
+
+            return metricsDto;
+        }
+        catch
+        {
+            _metrics.IncExecution("GetMetricEvents", "error");
+            throw;
+        }
+        finally
+        {
+            _metrics.ObserverDuration("GetMetricEvents", sw.Elapsed);
         }
     }
 }

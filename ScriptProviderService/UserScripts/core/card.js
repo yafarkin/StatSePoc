@@ -5,16 +5,19 @@ function handle(data) {
     const tag = data.Tag;
     const userId = data.UserId;
 
-    const calcValues = sum_avg.handle(data);
+    const calcValues = sum_avg.handle('values', data);
+    const calcEvents = sum_avg.handle('events', data);
     
     return {
         card1: {
             text: "Суммарное значение метрик",
-            value: calcValues.sum
+            value: calcValues.sum,
+            eventValue: calcEvents.sum,
         },
         card2: {
             text: "Среднее значение метрик",
-            value: calcValues.avg
+            value: calcValues.avg,
+            eventValue: calcEvents.avg,
         },
         userId: userId,
         tag: tag,

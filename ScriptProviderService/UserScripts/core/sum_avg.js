@@ -1,4 +1,4 @@
-function handle(data) {
+function handle(source, data) {
     const tag = data.Tag;
     const userId = data.UserId;
     const userGroupId = data.UserGroupId;
@@ -6,12 +6,14 @@ function handle(data) {
     const startDate = data.StartDate;
     const endDate = data.EndDate;
     
-    const metricValues = api.MetricApi.GetMetricValues(tag, userId, userGroupId, metricName, startDate, endDate);
+    const metricData = source === 'values' 
+        ? api.MetricApi.GetMetricValues(tag, userId, userGroupId, metricName, startDate, endDate)
+        : api.MetricApi.GetMetricEvents(null, tag, userId, userGroupId, metricName, startDate, endDate);
 
-    const sum = metricValues.reduce((acc, x) => acc + x.Value, 0);
-    const avg = metricValues.length > 0 ? sum / metricValues.length : 0;
+    const sum = metricData.reduce((acc, x) => acc + x.Value, 0);
+    const avg = metricData.length > 0 ? sum / metricData.length : 0;
 
-    const values = metricValues
+    const values = metricData
         .map(x => x.Value)
         .sort((a, b) => a - b);
 
