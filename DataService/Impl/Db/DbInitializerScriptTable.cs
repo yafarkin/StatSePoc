@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS Scripts (
 
     private async Task SeedScriptTableAsync(IDbConnection conn, CancellationToken cancellationToken)
     {
-        var count = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Scripts", cancellationToken);
+        var count = await conn.ExecuteScalarAsync<int>(
+            new CommandDefinition("SELECT COUNT(*) FROM Scripts", cancellationToken: cancellationToken));
 
         if (count != 0)
         {

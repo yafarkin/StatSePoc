@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS MetricValue (
     private async Task SeedMetricValueTableAsync(IDbConnection conn, CancellationToken cancellationToken)
     {
         var count = await conn.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM MetricValue", cancellationToken);
+            new CommandDefinition("SELECT COUNT(*) FROM MetricValue", cancellationToken: cancellationToken));
 
         if (count != 0)
         {

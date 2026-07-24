@@ -20,7 +20,7 @@ internal sealed class DbHealthCheck : IHealthCheck
             using var conn = _dbFactory.Create();
             
             var result = await conn.ExecuteScalarAsync<int>(
-                new CommandDefinition("SELECT 1", cancellationToken));
+                new CommandDefinition("SELECT 1", cancellationToken: cancellationToken));
 
             return result == 1
                 ? HealthCheckResult.Healthy("DB OK")
